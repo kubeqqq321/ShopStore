@@ -1,0 +1,59 @@
+﻿@using ShopStore.Models.Home
+@{
+    ViewBag.Title = "CheckoutDetails";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@if (Session["cart"] == null)
+{
+    <div class="alert alert-danger">
+        <strong>Brak produktów w koszyku!</strong>
+    </div>
+
+}
+else
+{
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Produkt</th>
+                <th>Cena (za sztukę)</th>
+                <th>Ilość</th>
+                <th>Zdjęcie</th>
+                <th>Suma</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                int TotalSuma = 0;
+            }
+            @foreach (Item item in (List<Item>)Session["cart"])
+            {
+                int suma = Convert.ToInt32(item.QuantityOfItem * item.Product.Price);
+                TotalSuma = Convert.ToInt32(@TotalSuma + suma);
+
+
+                <tr>
+                    <td>@item.Product.ProductName</td>
+                    <td>@item.Product.Price zł</td>
+                    <td>@item.QuantityOfItem</td>
+                    <td>
+                        <img class="img-responsive center-block" title="Kliknij by zobaczyć szczegóły"
+                             style="height:80px; width:80px"
+                             src="~/DatabaseProductImage/@item.Product.ProductImage" />
+                    </td>
+                    <td>@suma zł</td>
+                </tr>
+            }
+
+            <tr>
+                <td colspan="5" class="text-right"><b>Suma: @TotalSuma zł</b></td>
+
+            </tr>
+        </tbody>
+    </table>
+    <a onclick="window.history.back();" class="btn btn-danger">Cancel</a>
+    <a href="~/Home/ThanksForShopping" class="btn btn-success">Płatoność </a>
+}
+
